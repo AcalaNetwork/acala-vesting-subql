@@ -22,3 +22,13 @@ dataSources:
           filter:
             module: vesting
             method: VestingSchedulesUpdated
+        - handler: handleClaimed
+          kind: substrate/EventHandler
+          filter:
+            module: vesting
+            method: Claimed
+        - handler: handleAdded
+          kind: substrate/EventHandler
+          filter:
+            module: vesting
+            method: VestingScheduleAdded
