@@ -1,0 +1,28 @@
+type Account @entity {
+  id: ID! # user address
+  address: String
+}
+
+type VestingSchedule @entity {
+  id: ID!   # {blockNumber}-{eventIndex} 
+  account: Account
+  perPeriod: BigInt
+  period: BigInt
+  periodCount: BigInt
+  start: BigInt
+  from: Int # 1: add 2: update
+}
+
+type Claimed @entity {
+  id: ID! # {blockNumber}-{eventIndex} 
+  account: Account
+  amount: BigInt
+}
+
+type Vesting @entity {
+  id: ID! # address
+  total: BigInt
+  claimed: BigInt
+  schedules: [VestingSchedule] @derivedFrom(field: "account")
+  claimeds: [Claimed] @derivedFrom(field: "account")
+}
