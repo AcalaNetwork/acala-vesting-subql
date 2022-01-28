@@ -16,6 +16,10 @@ export class Account implements Entity {
 
     public address?: string;
 
+    public total?: bigint;
+
+    public claimed?: bigint;
+
 
     async save(): Promise<void>{
         let id = this.id;

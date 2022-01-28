@@ -1,10 +1,12 @@
-import { Account, Claimed, Vesting, VestingSchedule } from "../types"
+import { Account, Claimed, VestingSchedule } from "../types"
 
 export const getAccount = async (address: string) => {
   const _account = await Account.get(address);
   if (!_account) {
     const newAccount = new Account(address);
     newAccount.address = address;
+    newAccount.claimed = BigInt(0);
+    newAccount.total = BigInt(0);
     await newAccount.save();
     return newAccount;
   } else {
@@ -39,15 +41,3 @@ export const getClaimed = async (id: string) => {
     return _claimed;
   }
 }
-
-export const getVesting = async (id: string) => {
-  const _vesting = await Vesting.get(id);
-  if (!_vesting) {
-    const newVesting = new Vesting(id);
-    newVesting.total = BigInt(0);
-    newVesting.claimed = BigInt(0);
-    return newVesting;
-  } else {
-    return _vesting;
-  }
-};

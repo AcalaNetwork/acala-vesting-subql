@@ -8,5 +8,3 @@ export {VestingSchedule} from "./VestingSchedule"
 
 export {Claimed} from "./Claimed"
 
-export {Vesting} from "./Vesting"
-

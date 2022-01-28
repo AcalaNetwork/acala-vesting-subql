@@ -1,5 +1,5 @@
 import { SubstrateEvent } from "@subql/types";
-import { getAccount, getClaimed, getVesting, getVestingSchedule } from "../utils/record";
+import { getAccount, getClaimed, getVestingSchedule } from "../utils/record";
 
 export async function handleClaimed(event: SubstrateEvent): Promise<void> {
 	const [owner, _amount] = event.event.data;
@@ -9,14 +9,14 @@ export async function handleClaimed(event: SubstrateEvent): Promise<void> {
 	const account = await getAccount(ownerId);
 	const id = `${event.block.block.header.number.toString()}-${event.event.index.toString()}`;
 	const claimed = await getClaimed(id);
+
 	claimed.accountId = account.address;
 	claimed.amount = BigInt(amount);
 
-	const vesting = await getVesting(ownerId);
-	vesting.claimed += BigInt(amount);
+	account.claimed += BigInt(amount);
 
+	await account.save();
 	await claimed.save();
-	await vesting.save();
 }
 
 export async function handleAdded(event: SubstrateEvent): Promise<void> {
@@ -38,11 +38,10 @@ export async function handleAdded(event: SubstrateEvent): Promise<void> {
 	vestingSchedule.start = BigInt(start);
 	vestingSchedule.from = 1;
 
-	const vesting = await getVesting(ownerId);
-	vesting.total += BigInt(vestingSchedule.perPeriod * vestingSchedule.periodCount);
+	account.total += BigInt(vestingSchedule.perPeriod) * BigInt(vestingSchedule.periodCount);
 
+	await account.save();
 	await vestingSchedule.save();
-	await vesting.save();
 }
 
 interface DataProps { start: number, period: number, periodCount: number, perPeriod: number };
@@ -71,8 +70,6 @@ export async function handleUpdated(event: SubstrateEvent): Promise<void> {
 		await vestingSchedule.save();
 	}));
 
-	const vesting = await getVesting(ownerId);
-	vesting.claimed = BigInt(total);
-
-	await vesting.save();
+	account.total = total;
+	await account.save();
 };

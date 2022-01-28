@@ -1,6 +1,10 @@
 type Account @entity {
   id: ID! # user address
   address: String
+  total: BigInt
+  claimed: BigInt
+  schedules: [VestingSchedule] @derivedFrom(field: "account")
+  claimeds: [Claimed] @derivedFrom(field: "account")
 }
 
 type VestingSchedule @entity {
@@ -17,12 +21,4 @@ type Claimed @entity {
   id: ID! # {blockNumber}-{eventIndex} 
   account: Account
   amount: BigInt
-}
-
-type Vesting @entity {
-  id: ID! # address
-  total: BigInt
-  claimed: BigInt
-  schedules: [VestingSchedule] @derivedFrom(field: "account")
-  claimeds: [Claimed] @derivedFrom(field: "account")
 }
