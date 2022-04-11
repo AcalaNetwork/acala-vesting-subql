@@ -13,7 +13,7 @@ export async function handleClaimed(event: SubstrateEvent): Promise<void> {
 	claimed.accountId = account.address;
 	claimed.amount = BigInt(amount);
 
-	account.claimed += BigInt(amount);
+	account.claimed = BigInt(amount);
 
 	await account.save();
 	await claimed.save();
