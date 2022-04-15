@@ -7,7 +7,7 @@ export async function handleClaimed(event: SubstrateEvent): Promise<void> {
 	const amount = _amount.toString();
 
 	const account = await getAccount(ownerId);
-	const id = `${event.block.block.header.number.toString()}-${event.event.index.toString()}`;
+	const id = `${event.block.block.header.number.toString()}-${event.idx.toString()}`;
 	const claimed = await getClaimed(id);
 
 	claimed.accountId = account.address;
@@ -29,7 +29,7 @@ export async function handleAdded(event: SubstrateEvent): Promise<void> {
 	const start = (data as any)['start'].toString();
 
 	const account = await getAccount(ownerId);
-	const id = `${event.block.block.header.number.toString()}-${event.event.index.toString()}`;
+	const id = `${event.block.block.header.number.toString()}-${event.idx.toString()}`;
 	const vestingSchedule = await getVestingSchedule(id);
 	vestingSchedule.accountId = account.address;
 	vestingSchedule.perPeriod = BigInt(perPeriod);
@@ -51,7 +51,7 @@ export async function handleUpdated(event: SubstrateEvent): Promise<void> {
 
 	const ownerId = owner.toString();
 	const account = await getAccount(ownerId);
-	const id = `${event.block.block.header.number.toString()}-${event.event.index.toString()}`;
+	const id = `${event.block.block.header.number.toString()}-${event.idx.toString()}`;
 
 	let total = BigInt(0);
 
